@@ -20,7 +20,7 @@ const addOnePokemon = pokemon => ({
 });
 
 export const getAPokemon = id => async dispatch => {
-  const response = await fetch(`/api/pokemon/${id}`);
+  const response = await fetch(`/api/pokemon/${parseInt(id)}`);
 
   if (response.ok) {
     const data = await response.json();
