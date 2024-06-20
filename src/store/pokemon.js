@@ -58,6 +58,7 @@ export const createAPokemon = payload => async dispatch => {
   if (response.ok) {
     const pokemon = await response.json();
     dispatch(addOnePokemon(pokemon));
+    return pokemon;
   }
 }
 
