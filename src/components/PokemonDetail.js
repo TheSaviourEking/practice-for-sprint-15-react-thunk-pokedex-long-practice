@@ -11,13 +11,20 @@ const PokemonDetail = () => {
   const pokemon = useSelector(state => state.pokemon[pokemonId]);
   const [showEditPokeForm, setShowEditPokeForm] = useState(false);
   const [editItemId, setEditItemId] = useState(null);
+  const [addItem, setAddItem] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
     setShowEditPokeForm(false);
+    setAddItem(false);
     setEditItemId(null);
     dispatch(getAPokemon(pokemonId))
   }, [pokemonId, dispatch]);
+
+  const handleAddItem = (e) => {
+    e.preventDefault();
+    setAddItem(true);
+  }
 
   if (!pokemon || !pokemon.moves) {
     return null;
@@ -30,9 +37,28 @@ const PokemonDetail = () => {
       <ItemForm
         itemId={editItemId}
         hideForm={() => setEditItemId(null)}
+        formType={'edit'}
       />
     );
-  } else if (showEditPokeForm && pokemon.captured) {
+  }
+  else if (addItem && pokemon.captured) {
+    content = (
+      <ItemForm
+        itemId={null}
+        hideForm={() => setAddItem(false)}
+        formType={'add'}
+      />
+    );
+  }
+  // else if (showAddPokeForm && pokemon.captured) {
+  //   content = (
+  //     <AddPokemonForm
+  //       pokemon={pokemon}
+  //       hideForm={() => setShowEditPokeForm(false)}
+  //     />
+  //   );
+  // } 
+  else if (showEditPokeForm && pokemon.captured) {
     content = (
       <EditPokemonForm
         pokemon={pokemon}
@@ -70,7 +96,7 @@ const PokemonDetail = () => {
         <div>
           <h2>
             Items
-            <button> + </button>
+            <button onClick={handleAddItem}> + </button>
           </h2>
           <table>
             <thead>

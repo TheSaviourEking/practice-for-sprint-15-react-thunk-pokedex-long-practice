@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { editPokemonItem } from '../store/items';
+import { addPokemonItem, editPokemonItem } from '../store/items';
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
-const ItemForm = ({ itemId, hideForm }) => {
+const ItemForm = ({ itemId, hideForm, formType }) => {
   let item = useSelector(state => state.items[itemId]);
   const dispatch = useDispatch();
 
-  const [happiness, setHappiness] = useState(item.happiness);
-  const [price, setPrice] = useState(item.price);
-  const [name, setName] = useState(item.name);
+  const [happiness, setHappiness] = useState(item?.happiness || '');
+  const [price, setPrice] = useState(item?.price || '');
+  const [name, setName] = useState(item?.name || '');
 
   const updateName = (e) => setName(e.target.value);
   const updateHappiness = (e) => setHappiness(e.target.value);
   const updatePrice = (e) => setPrice(e.target.value);
 
+  const { pokemonId } = useParams();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -23,8 +25,10 @@ const ItemForm = ({ itemId, hideForm }) => {
       happiness,
       price
     };
-    
-    let returnedItem = dispatch(editPokemonItem(payload))
+
+    let returnedItem = null;
+    if (formType === 'edit') returnedItem = dispatch(editPokemonItem(payload));
+    else if (formType === 'add') returnedItem = dispatch(addPokemonItem(pokemonId, payload))
     if (returnedItem) {
       hideForm();
     }
@@ -60,7 +64,8 @@ const ItemForm = ({ itemId, hideForm }) => {
           value={price}
           onChange={updatePrice}
         />
-        <button type="submit">Update Item</button>
+        {/* <button type="submit">Update Item</button> */}
+        <button type="submit">{formType === 'edit' ? 'Update Item' : 'Add Item'}</button>
         <button type="button" onClick={handleCancelClick}>Cancel</button>
       </form>
     </section>

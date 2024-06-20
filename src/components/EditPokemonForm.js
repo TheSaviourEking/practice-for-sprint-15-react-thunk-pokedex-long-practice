@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { editAPokemon, getPokemonTypes } from '../store/pokemon';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
 const EditPokemonForm = ({ pokemon, hideForm }) => {
   const pokeTypes = useSelector(state => state.pokemon.types);
@@ -24,8 +23,6 @@ const EditPokemonForm = ({ pokemon, hideForm }) => {
   const updateType = (e) => setType(e.target.value);
   const updateMove1 = (e) => setMove1(e.target.value);
   const updateMove2 = (e) => setMove2(e.target.value);
-
-  const { pokemonId } = useParams();
 
   useEffect(() => {
     dispatch(getPokemonTypes());

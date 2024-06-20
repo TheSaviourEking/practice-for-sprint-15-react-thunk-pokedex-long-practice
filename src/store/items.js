@@ -51,6 +51,26 @@ export const editPokemonItem = (payload) => async dispatch => {
   }
 }
 
+export const addPokemonItem = (pokemonId, payload) => async dispatch => {
+  // /api/pokemon/:pokemonId/items
+  console.log(payload)
+  const response = await fetch(`/api/pokemon/${parseInt(pokemonId)}/items`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (response.ok) {
+    const item = await response.json();
+    alert('response');
+    console.log(item, '----------------------')
+    dispatch(add(item));
+    return item;
+  }
+}
+
 export const deletePokemonItem = (pokemonId, itemId) => async dispatch => {
   // /api/items/:id
   const response = await fetch(`/api/items/${parseInt(itemId)}`, {

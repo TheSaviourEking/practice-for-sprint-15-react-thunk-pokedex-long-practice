@@ -73,7 +73,6 @@ export const editAPokemon = payload => async dispatch => {
 
   if (response.ok) {
     const pokemon = await response.json();
-    console.log(pokemon, 'dat------------------------------------')
     dispatch(addOnePokemon(pokemon));
     return pokemon;
   }
@@ -143,13 +142,21 @@ const pokemonReducer = (state = initialState, action) => {
           )
         }
       };
+    // case ADD_ITEM:
+    //   return {
+    //     ...state,
+    //     [action.item.pokemonId]: {
+    //       ...state[action.item.pokemonId],
+    //       items: [...state[action.item.pokemonId].items, action.item.id]
+    //     }
+    //   };
     case ADD_ITEM:
-      console.log(action.item);
+      const { pokemonId, id } = action.item;
       return {
         ...state,
-        [action.item.pokemonId]: {
-          ...state[action.item.pokemonId],
-          items: [...state[action.item.pokemonId].items, action.item.id]
+        [pokemonId]: {
+          ...state[pokemonId],
+          items: state[pokemonId].items.includes(id) ? state[pokemonId].items : [...state[pokemonId].items, id]
         }
       };
     default:

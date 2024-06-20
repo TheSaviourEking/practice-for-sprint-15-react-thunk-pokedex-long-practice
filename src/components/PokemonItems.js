@@ -11,10 +11,12 @@ const PokemonItems = ({ pokemon, setEditItemId }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchPokemonItem(pokemon.id));
-  }, [pokemon.id]);
+  }, [pokemon.id, dispatch]);
 
   const handleDelete = (e, itemId) => {
     e.preventDefault();
+    console.log(items);
+    alert('hold');
 
     dispatch(deletePokemonItem(pokemon.id, itemId));
   }
