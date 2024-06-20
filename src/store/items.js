@@ -25,7 +25,7 @@ const remove = (itemId, pokemonId) => ({
   pokemonId
 });
 
-export const fetchAPokemon = (pokemonId) => async dispatch => {
+export const fetchAPokemonItem = (pokemonId) => async dispatch => {
   const response = await fetch(`/api/pokemon/${pokemonId}/items`);
   if (response.ok) {
     const items = await response.json();
@@ -33,6 +33,8 @@ export const fetchAPokemon = (pokemonId) => async dispatch => {
     return items;
   }
 }
+
+// export const edit
 
 const initialState = {};
 

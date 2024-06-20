@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchAPokemon } from "../store/items";
+import { fetchAPokemonItem } from "../store/items";
 
 const PokemonItems = ({ pokemon, setEditItemId }) => {
   const items = useSelector((state) => {
@@ -10,7 +10,7 @@ const PokemonItems = ({ pokemon, setEditItemId }) => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchAPokemon(pokemon.id));
+    dispatch(fetchAPokemonItem(pokemon.id));
   }, [pokemon.id])
 
   if (!items) {
