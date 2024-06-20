@@ -53,7 +53,6 @@ export const editPokemonItem = (payload) => async dispatch => {
 
 export const addPokemonItem = (pokemonId, payload) => async dispatch => {
   // /api/pokemon/:pokemonId/items
-  console.log(payload)
   const response = await fetch(`/api/pokemon/${parseInt(pokemonId)}/items`, {
     method: 'POST',
     headers: {
@@ -64,8 +63,6 @@ export const addPokemonItem = (pokemonId, payload) => async dispatch => {
 
   if (response.ok) {
     const item = await response.json();
-    alert('response');
-    console.log(item, '----------------------')
     dispatch(add(item));
     return item;
   }

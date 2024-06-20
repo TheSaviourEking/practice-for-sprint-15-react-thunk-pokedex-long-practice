@@ -15,8 +15,6 @@ const PokemonItems = ({ pokemon, setEditItemId }) => {
 
   const handleDelete = (e, itemId) => {
     e.preventDefault();
-    console.log(items);
-    alert('hold');
 
     dispatch(deletePokemonItem(pokemon.id, itemId));
   }
