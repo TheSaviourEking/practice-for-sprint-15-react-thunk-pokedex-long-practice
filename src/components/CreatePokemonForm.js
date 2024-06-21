@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { createAPokemon, getPokemonTypes } from '../store/pokemon';
 
+import ErrorMessage from './ErrorMessage';
+
 const CreatePokemonForm = ({ hideForm }) => {
   const pokeTypes = useSelector(state => state.pokemon.types);
   const dispatch = useDispatch();
@@ -15,6 +17,8 @@ const CreatePokemonForm = ({ hideForm }) => {
   const [type, setType] = useState(pokeTypes[0]);
   const [move1, setMove1] = useState('');
   const [move2, setMove2] = useState('');
+
+  const [errors, setErrors] = useState(null);
 
   const updateNumber = (e) => setNumber(e.target.value);
   const updateAttack = (e) => setAttack(e.target.value);
@@ -41,6 +45,7 @@ const CreatePokemonForm = ({ hideForm }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors(null);
 
     const payload = {
       number,
@@ -55,12 +60,38 @@ const CreatePokemonForm = ({ hideForm }) => {
     };
 
     // let createdPokemon;
-    let createdPokemon = await dispatch(createAPokemon(payload));
-    if (createdPokemon) {
-      history.push(`/pokemon/${createdPokemon.id}`);
-      hideForm();
+    // let createdPokemon = await dispatch(createAPokemon(payload));
+    // if (createdPokemon) {
+    //   history.push(`/pokemon/${createdPokemon.id}`);
+    //   hideForm();
+    // } else {
+    //   alert('errors')
+    // }
+    try {
+      let createdPokemon = await dispatch(createAPokemon(payload));
+      if (createdPokemon) {
+        history.push(`/pokemon/${createdPokemon.id}`);
+        hideForm();
+      }
+      else {
+        alert('errors')
+      }
+    } catch (error) {
+      alert('errors caught');
+      console.log('errors', error, '---------------------------------------')
+      if (error.errors) {
+        setErrors(error.errors);
+      } else {
+        // {"title":"Validation Error","errors":{"imageUrl":"Invalid value"}}
+        setErrors({ title: 'An unexpected error occurred' });
+      }
     }
   };
+
+  useEffect(() => {
+    alert('error changed')
+    // console.log('error Object in component', errors);
+  }, [errors])
 
   const handleCancelClick = (e) => {
     e.preventDefault();
@@ -77,6 +108,7 @@ const CreatePokemonForm = ({ hideForm }) => {
           required
           value={number}
           onChange={updateNumber} />
+        {errors?.number && <ErrorMessage label={'Number'} message={errors.number} />}
         <input
           type="number"
           placeholder="Attack"
@@ -85,6 +117,7 @@ const CreatePokemonForm = ({ hideForm }) => {
           required
           value={attack}
           onChange={updateAttack} />
+        {errors?.attack && <ErrorMessage label={'Attack'} message={errors.attack} />}
         <input
           type="number"
           placeholder="Defense"
@@ -93,26 +126,31 @@ const CreatePokemonForm = ({ hideForm }) => {
           required
           value={defense}
           onChange={updateDefense} />
+        {errors?.defense && <ErrorMessage label={'Defense'} message={errors.defense} />}
         <input
           type="text"
           placeholder="Image URL"
           value={imageUrl}
           onChange={updateImageUrl} />
+        {errors?.imageUrl && <ErrorMessage label={'Image Url'} message={errors.imageUrl} />}
         <input
           type="text"
           placeholder="Name"
           value={name}
           onChange={updateName} />
+        {errors?.name && <ErrorMessage label={'Name'} message={errors.name} />}
         <input
           type="text"
           placeholder="Move 1"
           value={move1}
           onChange={updateMove1} />
+        {errors?.move1 && <ErrorMessage label={'Move 1'} message={errors.move1} />}
         <input
           type="text"
           placeholder="Move 2"
           value={move2}
           onChange={updateMove2} />
+        {errors?.move2 && <ErrorMessage label={'Move 2'} message={errors.move2} />}
         <select onChange={updateType} value={type}>
           {pokeTypes.map(type =>
             <option key={type}>{type}</option>

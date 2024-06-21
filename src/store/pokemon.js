@@ -47,18 +47,32 @@ export const getPokemonTypes = () => async dispatch => {
 };
 
 export const createAPokemon = payload => async dispatch => {
-  const response = await fetch('/api/pokemon', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  });
+  try {
+    const response = await fetch('/api/pokemon', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
 
-  if (response.ok) {
-    const pokemon = await response.json();
-    dispatch(addOnePokemon(pokemon));
-    return pokemon;
+    if (response.ok) {
+      const pokemon = await response.json();
+      dispatch(addOnePokemon(pokemon));
+      return pokemon;
+    } else {
+      if (response.status === 422) {
+        const errorData = await response.json();
+        const error = new Error(errorData.title);
+        error.errors = errorData.errors;
+        throw error;
+      }
+    }
+  } catch (error) {
+    if (!error.data) {
+      error.data = { title: error.message, errors: { general: 'An unexpected error occurred' } };
+    }
+    throw error;
   }
 }
 
