@@ -64,21 +64,14 @@ const CreatePokemonForm = ({ hideForm }) => {
     // if (createdPokemon) {
     //   history.push(`/pokemon/${createdPokemon.id}`);
     //   hideForm();
-    // } else {
-    //   alert('errors')
-    // }
+    // } 
     try {
       let createdPokemon = await dispatch(createAPokemon(payload));
       if (createdPokemon) {
         history.push(`/pokemon/${createdPokemon.id}`);
         hideForm();
       }
-      else {
-        alert('errors')
-      }
     } catch (error) {
-      alert('errors caught');
-      console.log('errors', error, '---------------------------------------')
       if (error.errors) {
         setErrors(error.errors);
       } else {
@@ -87,11 +80,6 @@ const CreatePokemonForm = ({ hideForm }) => {
       }
     }
   };
-
-  useEffect(() => {
-    alert('error changed')
-    // console.log('error Object in component', errors);
-  }, [errors])
 
   const handleCancelClick = (e) => {
     e.preventDefault();
